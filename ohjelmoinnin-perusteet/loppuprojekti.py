@@ -7,4 +7,4 @@ print ("haista vittu")
 
 print(meisselimasi)
 print(hiivakasa)
-print(jeesuksen perse)
+print(jeesuksen perseet)
