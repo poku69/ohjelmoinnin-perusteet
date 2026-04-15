@@ -6,3 +6,4 @@ print ("haista vittu")
 
 
 print(meisselimasi)
+print(hiivakasa)
