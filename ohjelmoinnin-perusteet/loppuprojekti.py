@@ -5,4 +5,4 @@ print ("haista saatana")
 print ("haista vittu")
 
 
-print(toim)
+print(meisselimasi)
