@@ -33,9 +33,6 @@ def inventory():
 
     print()
 
-
-
-
 #sampan koodi tuotteiden etsimiseen
 
 def search():
@@ -53,68 +50,6 @@ def search():
     for product in results:
           print(f"{product.product_id:<10}{product.name:<20}{product.price:<10}{product.stock:<10}")        #tulostaa tuotteet kohdalleen
     print()
-
-
-
-
-#kristianin koodia
-def update_stock():
-    product_id = input("Enter product ID: ").strip()
-
-    
-    product = None
-    #oletaan aluksi ettei tuotetta löydy
-    for p in products:
-        if p.product_id == product_id:
-            product = p
-            break
-#etsitään tuote Id:n avulla, jos ei löydy palataan alkuun
-#next koodi käy läpi product listan ja hakee listalta saman id:n jos sellaine on
-
-    
-    if product is None:
-        print("Product not found")
-        return
-    #jos tuotetta ei ole palataan alkuun
-
-    print(f"Product: {product.name} | Current stock: {product.stock}")
-    print("1. Restock (add items)")
-    print("2. Sell (remove items)")
-    #kysytään lisätäänkö vai vähennetäänkö varastosta
-
-    choice = input("Choose: ").strip()
-
-    # Tarkistetaan onko tuotetta tarpeaksi ja ettei pyyntö ole negatiivinen
-    try:
-        amount = int(input("Enter amount: "))
-        if amount <= 0:
-            print("Amount must be positive")
-            return
-    except ValueError:
-        print("Invalid amount")
-        return
-#jos ei hyväksytty luku palataan alkuun
-
-    if choice == "1":
-        # Lisätään varastoon
-        product.stock += amount
-        print(f"Restocked {amount} units. New stock: {product.stock}")
-
-    elif choice == "2":
-        # Tarkistetaan onko tuotetta tarpeaksi
-        if amount > product.stock:
-            print(f"Not enough stock! Available: {product.stock}")
-            return
-        
-        # Vähennetään tuote varastosta ja lasketaan myyntitulo
-        product.stock -= amount
-        total = amount * product.price
-        print(f"Sold {amount} units. New stock: {product.stock} | Total sale: {total:.2f}€")
-#total:.2f muuttaa hinnan kahden desimaalin tarkuuteen
-    else:
-        print("Invalid choice")
-        #jos ei hyväksytty vaihtoehto palataan alkuun
-    
 
 
 
@@ -139,9 +74,37 @@ def UI():
         else:
             print("Invalid choice")
 
-if __name__ == "__main__":
-    products = []
-    UI()
 
+if __name__ == "__main__":
+
+#kristianin koodia
+    def update_stock():
+        #kysytään päivitettävän tuotteen ID
+        product_id = input("Enter product ID to update: ")
+        target_product = None
+        for product in products:
+            #tarkistetaan täsmääkö id jo olemassa olevan id:n kanssa
+            if product.product_id == product_id:
+                target_product = product
+                break
+
+            if not target_products: 
+                print(f"no product found with that ID{product_id}")
+                return
+            #jos tuotetta ei löydy palataan alkuun¨
+            action = input("Type "restock" to add inventory or "sell" to remocve from inventory:").lower()
+            #kysytään halutaanko lisätä vai poistaa varastosta
+            # .lower() muuttaa pieniksi kirjaimiksi
+            if action in ["restock", "sell"]:
+                amount = int(input("Enter amount: "))
+                if action == "restock":
+                    target_product.stock += amount
+                    print(f"Restocked {amount} units. New stock for '{target_product.name}' is {target_product.stock}.")
+                elif action == "sell":
+                    if target_product.stock >= amount:
+                        target_product.stock -= amount
+                        print(f"Sold {amount} units. Remaining stock for '{target_product.name}' is {target_product.stock}.")
+                    else:
+                        print(f"Not enough stock to sell {amount} units. Current stock is {target_product.stock}.")
 
 

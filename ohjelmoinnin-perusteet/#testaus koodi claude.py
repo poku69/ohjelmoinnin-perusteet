@@ -1,3 +1,4 @@
+#testaus
 class Product:
     def __init__(self, product_id, name, price, stock):
         self.product_id = product_id
@@ -110,7 +111,7 @@ def update_stock():
         product.stock -= amount
         total = amount * product.price
         print(f"Sold {amount} units. New stock: {product.stock} | Total sale: {total:.2f}€")
-#total:.2f muuttaa hinnan kahden desimaalin tarkuuteen
+
     else:
         print("Invalid choice")
         #jos ei hyväksytty vaihtoehto palataan alkuun
@@ -142,6 +143,11 @@ def UI():
 if __name__ == "__main__":
     products = []
     UI()
+
+
+
+
+
 
 
 
