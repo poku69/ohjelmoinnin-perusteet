@@ -28,14 +28,15 @@ def inventory():
     print("Inventory:")
     print(f"{'ID':<10}{'Name':<20}{'Price':<10}{'Stock':<10}")
 
+    print("-" * 50)
+
     for product in products:
         print(f"{product.product_id:<10}{product.name:<20}{product.price:<10}{product.stock:<10}")
-    print("-" * 50)
-    
+
     print()
 
 
-def main():
+def UI():
     while True:
         print("1. Add Product")
         print("2. Inventory")
@@ -51,5 +52,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    UI()
 
