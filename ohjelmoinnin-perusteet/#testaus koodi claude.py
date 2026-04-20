@@ -1,4 +1,7 @@
-#testaus
+import tkinter as tk
+from tkinter import messagebox
+
+# ---------- DATA ----------
 class Product:
     def __init__(self, product_id, name, price, stock):
         self.product_id = product_id
@@ -6,148 +9,114 @@ class Product:
         self.price = price
         self.stock = stock
 
+products = []
 
+# ---------- FUNCTIONS ----------
 def add_product():
-    product_id = input("Enter product ID: ")
-    name = input("Enter product name: ")
-    price = float(input("Enter price: "))
-    stock = int(input("Enter stock: "))
-
-    product = Product(product_id, name, price, stock)
-    products.append(product)
-
-    print("Product added")
-
-
-def inventory():
-    if not products:
-        print("Inventory is empty")
-        return
-
-    print("Inventory:")
-    print(f"{'ID':<10}{'Name':<20}{'Price':<10}{'Stock':<10}")
-
-    print("-" * 50)
-
-    for product in products:
-        print(f"{product.product_id:<10}{product.name:<20}{product.price:<10}{product.stock:<10}")
-
-    print()
-
-
-
-
-#sampan koodi tuotteiden etsimiseen
-
-def search():
-    search = input("Enter product nameor ID: ").lower() 
-    
-    results = [p for p in products if search in p.name.lower()or search in p.product_id.lower()]  #etsii tuotteita
-    
-    if not results:
-        print("No products found")                  #jos ei löydy tuotetta
-        return                                      #palaa takaisin
-    
-    print(f"{'ID':<10}{'Name':<20}{'Price':<10}{'Stock':<10}")              #otsikko rivi kohdalleen
-    print("-" * 50)                                                         #muutama viiva erottamaan
-    
-    for product in results:
-          print(f"{product.product_id:<10}{product.name:<20}{product.price:<10}{product.stock:<10}")        #tulostaa tuotteet kohdalleen
-    print()
-
-
-
-
-#kristianin koodia
-def update_stock():
-    product_id = input("Enter product ID: ").strip()
-
-    
-    product = None
-    #oletaan aluksi ettei tuotetta löydy
-    for p in products:
-        if p.product_id == product_id:
-            product = p
-            break
-#etsitään tuote Id:n avulla, jos ei löydy palataan alkuun
-#next koodi käy läpi product listan ja hakee listalta saman id:n jos sellaine on
-
-    
-    if product is None:
-        print("Product not found")
-        return
-    #jos tuotetta ei ole palataan alkuun
-
-    print(f"Product: {product.name} | Current stock: {product.stock}")
-    print("1. Restock (add items)")
-    print("2. Sell (remove items)")
-    #kysytään lisätäänkö vai vähennetäänkö varastosta
-
-    choice = input("Choose: ").strip()
-
-    # Tarkistetaan onko tuotetta tarpeaksi ja ettei pyyntö ole negatiivinen
     try:
-        amount = int(input("Enter amount: "))
-        if amount <= 0:
-            print("Amount must be positive")
-            return
-    except ValueError:
-        print("Invalid amount")
+        product = Product(
+            entry_id.get(),
+            entry_name.get(),
+            float(entry_price.get()),
+            int(entry_stock.get())
+        )
+        products.append(product)
+        messagebox.showinfo("Success", "Product added")
+        clear_entries()
+    except:
+        messagebox.showerror("Error", "Invalid input")
+
+def show_inventory():
+    text_output.delete("1.0", tk.END)
+
+    if not products:
+        text_output.insert(tk.END, "Inventory is empty\n")
         return
-#jos ei hyväksytty luku palataan alkuun
 
-    if choice == "1":
-        # Lisätään varastoon
-        product.stock += amount
-        print(f"Restocked {amount} units. New stock: {product.stock}")
+    for p in products:
+        text_output.insert(tk.END,
+            f"{p.product_id} | {p.name} | {p.price}€ | Stock: {p.stock}\n"
+        )
 
-    elif choice == "2":
-        # Tarkistetaan onko tuotetta tarpeaksi
-        if amount > product.stock:
-            print(f"Not enough stock! Available: {product.stock}")
+def search_product():
+    keyword = entry_search.get().lower()
+    text_output.delete("1.0", tk.END)
+
+    results = [p for p in products if keyword in p.name.lower() or keyword in p.product_id.lower()]
+
+    if not results:
+        text_output.insert(tk.END, "No products found\n")
+        return
+
+    for p in results:
+        text_output.insert(tk.END,
+            f"{p.product_id} | {p.name} | {p.price}€ | Stock: {p.stock}\n"
+        )
+
+def update_stock():
+    pid = entry_id.get()
+    amount = int(entry_stock.get())
+
+    for p in products:
+        if p.product_id == pid:
+            p.stock += amount
+            messagebox.showinfo("Updated", f"New stock: {p.stock}")
             return
-        
-        # Vähennetään tuote varastosta ja lasketaan myyntitulo
-        product.stock -= amount
-        total = amount * product.price
-        print(f"Sold {amount} units. New stock: {product.stock} | Total sale: {total:.2f}€")
 
-    else:
-        print("Invalid choice")
-        #jos ei hyväksytty vaihtoehto palataan alkuun
-    
+    messagebox.showerror("Error", "Product not found")
 
+def remove_product():
+    pid = entry_id.get()
 
+    for p in products:
+        if p.product_id == pid:
+            products.remove(p)
+            messagebox.showinfo("Removed", p.name)
+            return
 
-def UI():
-    while True:
-        print("1. Add Product")
-        print("2. Inventory")
-        print("3. Search Product")
-        print("4. Update Stock")  #lisätty valikkoon kohta varaston päivittämiseen
+    messagebox.showerror("Error", "Product not found")
 
+def clear_entries():
+    entry_id.delete(0, tk.END)
+    entry_name.delete(0, tk.END)
+    entry_price.delete(0, tk.END)
+    entry_stock.delete(0, tk.END)
 
-        choice = input("Choose: ")
+# ---------- GUI ----------
+root = tk.Tk()
+root.title("Inventory System")
+root.geometry("500x500")
 
-        if choice == "1":
-            add_product()
-        elif choice == "2":
-            inventory()
-        elif choice == "3":
-            search()                #alkuvalikossa tapa etsiä tuotteita
-        elif choice == "4":
-            update_stock()          #lisätty valikkoon kohta varaston päivittämiseen
-        else:
-            print("Invalid choice")
+# Inputs
+tk.Label(root, text="Product ID").pack()
+entry_id = tk.Entry(root)
+entry_id.pack()
 
-if __name__ == "__main__":
-    products = []
-    UI()
+tk.Label(root, text="Name").pack()
+entry_name = tk.Entry(root)
+entry_name.pack()
 
+tk.Label(root, text="Price").pack()
+entry_price = tk.Entry(root)
+entry_price.pack()
 
+tk.Label(root, text="Stock").pack()
+entry_stock = tk.Entry(root)
+entry_stock.pack()
 
+tk.Label(root, text="Search").pack()
+entry_search = tk.Entry(root)
+entry_search.pack()
 
+# Buttons
+tk.Button(root, text="Add Product", command=add_product).pack(pady=5)
+tk.Button(root, text="Show Inventory", command=show_inventory).pack(pady=5)
+tk.Button(root, text="Search", command=search_product).pack(pady=5)
+tk.Button(root, text="Update Stock (+)", command=update_stock).pack(pady=5)
+tk.Button(root, text="Remove Product", command=remove_product).pack(pady=5)
 
+# Output area
+text_output = tk.Text(root, height=10)
+text_output.pack()
 
-
-
+root.mainloop()
