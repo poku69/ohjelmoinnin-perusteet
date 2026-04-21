@@ -85,7 +85,7 @@ def update_stock():
             product = p
             break
 #etsitään tuote Id:n avulla, jos ei löydy palataan alkuun
-#next koodi käy läpi product listan ja hakee listalta saman id:n jos sellaine on
+#koodi käy läpi product listan ja hakee listalta saman id:n jos sellaine on
 
     
     if product is None:
