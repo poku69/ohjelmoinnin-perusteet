@@ -1,4 +1,16 @@
-import tkinter as tk
+import json
+
+def save_products():
+    with open("products.json", "w") as file:
+        json.dump([p.__dict__ for p in products], file)
+
+def load_products():
+    try:
+        with open("products.json", "r") as file:
+            data = json.load(file)
+            return [Product(**d) for d in data]
+    except FileNotFoundError:
+        return []                                         #Tuotteiden tallennus ja lataus ^
 
 class Product:
     def __init__(self, product_id, name, price, stock):
@@ -16,6 +28,8 @@ def add_product():
 
     product = Product(product_id, name, price, stock)
     products.append(product)
+
+    save_products()
 
     print("Product added")
 
@@ -71,7 +85,7 @@ def update_stock():
             product = p
             break
 #etsitään tuote Id:n avulla, jos ei löydy palataan alkuun
-#next koodi käy läpi product listan ja hakee listalta saman id:n jos sellaine on
+#koodi käy läpi product listan ja hakee listalta saman id:n jos sellaine on
 
     
     if product is None:
@@ -127,7 +141,8 @@ def UI():
         print("3. Search Product")
         print("4. Update Stock")  #lisätty valikkoon kohta varaston päivittämiseen
         print("5. Remove Product")  #lisätty valikkoon kohta tuotteen poistamiseen
-
+        print("6. Exit")
+        
         choice = input("Choose: ")
 
         if choice == "1":
@@ -137,10 +152,11 @@ def UI():
         elif choice == "3":
             search()                #alkuvalikossa tapa etsiä tuotteita
         elif choice == "4":
-            update_stock()   
-                   #lisätty valikkoon kohta varaston päivittämiseen
+            update_stock()   #lisätty valikkoon kohta varaston päivittämiseen
         elif choice == "5":
             remove_product()
+        elif choice =="6":
+            exit()  
         else:
             print("Invalid choice")
 
@@ -154,14 +170,6 @@ def remove_product ():
         
 print ("Product not found")
 
-
-
-
-
-
 if __name__ == "__main__":
-    products = []
+    products = load_products()                                         
     UI()
-
-
-
