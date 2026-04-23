@@ -51,23 +51,20 @@ def inventory():
 
 
 
-
-#sampan koodi tuotteiden etsimiseen
-
 def search():
-    search = input("Enter product nameor ID: ").lower() 
+    search = input("Enter product nameor ID: ").lower()                 #määritetään funktio "search"
     
-    results = [p for p in products if search in p.name.lower()or search in p.product_id.lower()]  #etsii tuotteita
+    results = [p for p in products if search in p.name.lower()or search in p.product_id.lower()]  #etsii tuotteita listalta
     
     if not results:
         print("No products found")                  #jos ei löydy tuotetta
         return                                      #palaa takaisin
     
-    print(f"{'ID':<10}{'Name':<20}{'Price':<10}{'Stock':<10}")              #otsikko rivi kohdalleen
+    print(f"{'ID':<10}{'Name':<20}{'Price':<10}{'Stock':<10}")              #tulostaa otsikko rivin määritettyjen välien lailla
     print("-" * 50)                                                         #muutama viiva erottamaan
     
     for product in results:
-          print(f"{product.product_id:<10}{product.name:<20}{product.price:<10}{product.stock:<10}")        #tulostaa tuotteet kohdalleen
+          print(f"{product.product_id:<10}{product.name:<20}{product.price:<10}{product.stock:<10}")        #tulostaa tuotteet määritettyjen välien lailla
     print()
 
 
