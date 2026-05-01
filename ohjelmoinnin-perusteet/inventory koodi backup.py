@@ -2,7 +2,7 @@ import json
 
 def save_products():
     with open("products.json", "w") as file:
-        json.dump([p.__dict__ for p in products], file)
+        json.dump([p.__dict__ for p in products], file)         #tallentaa products listan JSON-tiedostoon
 
 def load_products():
     try:
@@ -10,21 +10,21 @@ def load_products():
             data = json.load(file)
             return [Product(**d) for d in data]
     except FileNotFoundError:
-        return []                                         #Tuotteiden tallennus ja lataus ^
+        return []                                            #Tuotteiden tallennus ja lataus ^
 
 class Product:
     def __init__(self, product_id, name, price, stock):
         self.product_id = product_id
         self.name = name
         self.price = price
-        self.stock = stock
+        self.stock = stock                                  #tämä on 1 tuote varastossa, tuotteelle ominaisuuksia: product ID, nimi, hinta sekä saldo
 
 
 def add_product():
     product_id = input("Enter product ID: ")
     name = input("Enter product name: ")
     price = float(input("Enter price: "))
-    stock = int(input("Enter stock: "))
+    stock = int(input("Enter stock: "))                     #lisää tuotteen varastoon käyttäjän syöttämien tietojen perusteella
 
     product = Product(product_id, name, price, stock)
     products.append(product)
@@ -37,7 +37,7 @@ def add_product():
 def inventory():
     if not products:
         print("Inventory is empty")
-        return
+        return                                              #varasto, tulostaa varaston kaikki tuotteet listattuna, jos varasto on tyhjä siitä ilmoitetaan käyttäjälle
 
     print("Inventory:")
     print(f"{'ID':<10}{'Name':<20}{'Price':<10}{'Stock':<10}")
@@ -45,7 +45,7 @@ def inventory():
     print("-" * 50)
 
     for product in products:
-        print(f"{product.product_id:<10}{product.name:<20}{product.price:<10}{product.stock:<10}")
+        print(f"{product.product_id:<10}{product.name:<20}{product.price:<10}{product.stock:<10}")      #listaa otsikon sekä tuotteet määritetyillä väleillä
 
     print()
 
@@ -72,8 +72,6 @@ def search():
 
 
 
-
-#kristianin koodia
 def update_stock():
     product_id = input("Enter product ID: ").strip()
 
@@ -134,13 +132,13 @@ def update_stock():
 
 
 
-def UI():
+def UI():                               #päävalikko, josta käyttäjä voi valita, mitä haluaa tehdä. Pyörii silmukassa, kunnes käyttäjä valitsee kohdan Exit
     while True:
         print("1. Add Product")
         print("2. Inventory")
         print("3. Search Product")
-        print("4. Update Stock")  #lisätty valikkoon kohta varaston päivittämiseen
-        print("5. Remove Product")  #lisätty valikkoon kohta tuotteen poistamiseen
+        print("4. Update Stock")  
+        print("5. Remove Product")  
         print("6. Exit")
         
         choice = input("Choose: ")
@@ -150,9 +148,9 @@ def UI():
         elif choice == "2":
             inventory()
         elif choice == "3":
-            search()                #alkuvalikossa tapa etsiä tuotteita
+            search()                
         elif choice == "4":
-            update_stock()   #lisätty valikkoon kohta varaston päivittämiseen
+            update_stock()   
         elif choice == "5":
             remove_product()
         elif choice =="6":
@@ -171,5 +169,5 @@ def remove_product ():
 print ("Product not found")
 
 if __name__ == "__main__":
-    products = load_products()                                         
-    UI()
+    products = load_products()               #ladataan aiemmin tallennetut tuotteet             
+    UI()                                    #käynnistetään päävalikko
